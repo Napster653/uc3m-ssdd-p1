@@ -1,2 +1,43 @@
+#include <mqueue.h>
+#include <pthread.h>
 #include <stdio.h>
 #include <stdlib.h>
+
+int init ()
+{
+	mqd_t q_server;
+	mqd_t q_client;
+	struct request req;
+	int res;
+	struct mq_attr q_attr;
+	attr.mq_maxmsg = 1;
+	attr.mq_msgsize = sizeof(int);
+
+	q_client = mq_open ("/", O_CREAT|O_RDONLY, 0700, &q_attr)
+	q_server = mq_open ("/Queue656", O_WRONLY);
+}
+
+int set_value ()
+{
+
+}
+
+int get_value ()
+{
+
+}
+
+int modify_value ()
+{
+
+}
+
+int delete_key ()
+{
+
+}
+
+int num_items ()
+{
+
+}
