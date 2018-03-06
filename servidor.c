@@ -1,3 +1,4 @@
+#include "messages.h"
 #include "servidor.h"
 
 pthread_mutex_t mutex_message;
@@ -101,7 +102,7 @@ void process_message (struct request *message_arg)
 		// Contar elementos
 		// return en q_client
 	}
-	q_client = mq_open(message_local.q_name, O_WRONLY);
+	q_client = mq_open (message_local.q_name, O_WRONLY);
 	if (q_client == -1)
 	{
 		perror ("No se puede abrir la cola del cliente");
@@ -111,5 +112,5 @@ void process_message (struct request *message_arg)
 		mq_send (q_client, (const char*) &result, sizeof(int), 0);
 		mq_close (q_client);
 	}
-	pthread_exit(0);
+	pthread_exit (0);
 }
