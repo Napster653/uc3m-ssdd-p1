@@ -131,9 +131,11 @@ int modify_value (int key, char* value1, float value2)
 	mq_close (q_server);
 	mq_close (q_client);
 	mq_unlink ((const char*) name);
+
+	return ret.result;
 }
 
-int delete_key ()
+int delete_key (int key)
 {
 	mqd_t q_server;
 	mqd_t q_client;
@@ -149,8 +151,7 @@ int delete_key ()
 	q_server = mq_open ("/Queue656", O_WRONLY);
 
 	req.op = 4;
-	// Value1
-	// Value2
+	req.key = key
 	strcpy (req.q_name, (const char*) name);
 
 	mq_send (q_server, (const char*) &req, sizeof(struct Request), 0);
@@ -159,6 +160,8 @@ int delete_key ()
 	mq_close (q_server);
 	mq_close (q_client);
 	mq_unlink ((const char*) name);
+
+	return ret.result;
 }
 
 int num_items ()
@@ -177,8 +180,6 @@ int num_items ()
 	q_server = mq_open ("/Queue656", O_WRONLY);
 
 	req.op = 5;
-	// Value1
-	// Value2
 	strcpy (req.q_name, (const char*) name);
 
 	mq_send (q_server, (const char*) &req, sizeof(struct Request), 0);
@@ -187,4 +188,6 @@ int num_items ()
 	mq_close (q_server);
 	mq_close (q_client);
 	mq_unlink ((const char*) name);
+
+	return ret.result;
 }
