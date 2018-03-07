@@ -16,3 +16,10 @@ struct Node
 	float value2;
 	struct Node *next;
 };
+
+struct Response
+{
+	int result;
+	char* value1;
+	float value2;
+};

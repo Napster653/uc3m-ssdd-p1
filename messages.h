@@ -3,7 +3,9 @@
 struct request
 {
 	int op;
-	char *value1;
+	int key;
+	char* value1;
 	float value2;
+	float* value3;
 	char q_name[MAXSIZE];
 };
