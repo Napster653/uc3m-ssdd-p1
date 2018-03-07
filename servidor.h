@@ -16,10 +16,3 @@ struct Node
 	float value2;
 	struct Node *next;
 };
-
-struct Response
-{
-	int result;
-	char value1[MAX_CHAR_LENGTH];
-	float value2;
-};

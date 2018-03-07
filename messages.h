@@ -1,11 +1,18 @@
-#define MAX_CHAR_LENGTH 255
+#define MAX_VALUE1 255
+#define MAX_Q_NAME 128
 
 struct Request
 {
 	int op;
 	int key;
+	char value1[MAX_VALUE1];
+	float value2;
+	char q_name[MAX_Q_NAME];
+};
+
+struct Response
+{
+	int result;
 	char value1[MAX_CHAR_LENGTH];
 	float value2;
-	float* value3;
-	char q_name[MAX_CHAR_LENGTH];
 };

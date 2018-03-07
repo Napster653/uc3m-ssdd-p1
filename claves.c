@@ -11,8 +11,8 @@ int init ()
 {
 	mqd_t q_server;
 	mqd_t q_client;
-	struct request req;
-	int res;
+	struct Request req;
+	struct Response res;
 	struct mq_attr q_attr;
 	attr.mq_maxmsg = 1;
 	attr.mq_msgsize = sizeof(int);
@@ -25,20 +25,22 @@ int init ()
 	req.op = 0;
 	strcpy (req.q_name, (const char*) name);
 
-	mq_send (q_server, (const char*) &req, sizeof(struct request), 0);
+	mq_send (q_server, (const char*) &req, sizeof(struct Request), 0);
 	mq_receive (q_client, (char*) &res, sizeof(int), 0);
 
 	mq_close (q_server);
 	mq_close (q_client);
 	mq_unlink ((const char*) name);
+
+	return res.result;
 }
 
-int set_value ()
+int set_value (int key, char* value1, float value2)
 {
 	mqd_t q_server;
 	mqd_t q_client;
-	struct request req;
-	int res;
+	struct Request req;
+	struct Response res;
 	struct mq_attr q_attr;
 	attr.mq_maxmsg = 1;
 	attr.mq_msgsize = sizeof(int);
@@ -49,24 +51,27 @@ int set_value ()
 	q_server = mq_open ("/Queue656", O_WRONLY);
 
 	req.op = 1;
-	// Value1
-	// Value2
+	req.key = key;
+	strcpy (req.value1, (const char*) value1);
+	req.value2 = value2;
 	strcpy (req.q_name, (const char*) name);
 
-	mq_send (q_server, (const char*) &req, sizeof(struct request), 0);
+	mq_send (q_server, (const char*) &req, sizeof(struct Request), 0);
 	mq_receive (q_client, (char*) &res, sizeof(int), 0);
 
 	mq_close (q_server);
 	mq_close (q_client);
 	mq_unlink ((const char*) name);
+
+	return res.result;
 }
 
-int get_value ()
+int get_value (int key, char* value1, float* value2)
 {
 	mqd_t q_server;
 	mqd_t q_client;
-	struct request req;
-	int res;
+	struct Request req;
+	struct Response res;
 	struct mq_attr q_attr;
 	attr.mq_maxmsg = 1;
 	attr.mq_msgsize = sizeof(int);
@@ -77,24 +82,34 @@ int get_value ()
 	q_server = mq_open ("/Queue656", O_WRONLY);
 
 	req.op = 2;
-	// Value1
-	// Value2
+	req.key = key;
 	strcpy (req.q_name, (const char*) name);
 
-	mq_send (q_server, (const char*) &req, sizeof(struct request), 0);
+	mq_send (q_server, (const char*) &req, sizeof(struct Request), 0);
 	mq_receive (q_client, (char*) &res, sizeof(int), 0);
 
 	mq_close (q_server);
 	mq_close (q_client);
 	mq_unlink ((const char*) name);
+
+	if (res.result == 0)
+	{
+		strcpy (value1, (const char*) res.value1);
+		*value2 = res.value2;
+		return 0;
+	}
+	else
+	{
+		return -1;
+	}
 }
 
 int modify_value ()
 {
 	mqd_t q_server;
 	mqd_t q_client;
-	struct request req;
-	int res;
+	struct Request req;
+	struct Response res;
 	struct mq_attr q_attr;
 	attr.mq_maxmsg = 1;
 	attr.mq_msgsize = sizeof(int);
@@ -109,7 +124,7 @@ int modify_value ()
 	// Value2
 	strcpy (req.q_name, (const char*) name);
 
-	mq_send (q_server, (const char*) &req, sizeof(struct request), 0);
+	mq_send (q_server, (const char*) &req, sizeof(struct Request), 0);
 	mq_receive (q_client, (char*) &res, sizeof(int), 0);
 
 	mq_close (q_server);
@@ -121,8 +136,8 @@ int delete_key ()
 {
 	mqd_t q_server;
 	mqd_t q_client;
-	struct request req;
-	int res;
+	struct Request req;
+	struct Response res;
 	struct mq_attr q_attr;
 	attr.mq_maxmsg = 1;
 	attr.mq_msgsize = sizeof(int);
@@ -137,7 +152,7 @@ int delete_key ()
 	// Value2
 	strcpy (req.q_name, (const char*) name);
 
-	mq_send (q_server, (const char*) &req, sizeof(struct request), 0);
+	mq_send (q_server, (const char*) &req, sizeof(struct Request), 0);
 	mq_receive (q_client, (char*) &res, sizeof(int), 0);
 
 	mq_close (q_server);
@@ -149,8 +164,8 @@ int num_items ()
 {
 	mqd_t q_server;
 	mqd_t q_client;
-	struct request req;
-	int res;
+	struct Request req;
+	struct Response res;
 	struct mq_attr q_attr;
 	attr.mq_maxmsg = 1;
 	attr.mq_msgsize = sizeof(int);
@@ -165,7 +180,7 @@ int num_items ()
 	// Value2
 	strcpy (req.q_name, (const char*) name);
 
-	mq_send (q_server, (const char*) &req, sizeof(struct request), 0);
+	mq_send (q_server, (const char*) &req, sizeof(struct Request), 0);
 	mq_receive (q_client, (char*) &res, sizeof(int), 0);
 
 	mq_close (q_server);
