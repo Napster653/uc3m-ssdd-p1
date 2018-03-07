@@ -104,7 +104,7 @@ int get_value (int key, char* value1, float* value2)
 	}
 }
 
-int modify_value ()
+int modify_value (int key, char* value1, float value2)
 {
 	mqd_t q_server;
 	mqd_t q_client;
@@ -120,8 +120,9 @@ int modify_value ()
 	q_server = mq_open ("/Queue656", O_WRONLY);
 
 	req.op = 3;
-	// Value1
-	// Value2
+	req.key = key;
+	strcpy (req.value1, (const char*) value1);
+	req.value2 = value2
 	strcpy (req.q_name, (const char*) name);
 
 	mq_send (q_server, (const char*) &req, sizeof(struct Request), 0);
