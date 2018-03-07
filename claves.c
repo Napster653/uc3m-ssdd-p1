@@ -15,7 +15,9 @@ int init ()
 	attr.mq_maxmsg = 1;
 	attr.mq_msgsize = sizeof(int);
 
-	q_client = mq_open ("", O_CREAT|O_RDONLY, 0700, &q_attr); // Nombre TBD
+	char name[128];
+	sprintf(name, "/")
+	q_client = mq_open ("/QueueClient-%d", O_CREAT|O_RDONLY, 0700, &q_attr); // Nombre TBD
 	q_server = mq_open ("/Queue656", O_WRONLY);
 
 	req.op = 0;
