@@ -23,8 +23,6 @@ int init ()
 	q_server = mq_open ("/Queue656", O_WRONLY);
 
 	req.op = 0;
-	// Value1
-	// Value2
 	strcpy (req.q_name, (const char*) name);
 
 	mq_send (q_server, (const char*) &req, sizeof(struct request), 0);

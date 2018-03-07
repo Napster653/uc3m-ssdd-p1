@@ -12,7 +12,7 @@
 struct Node
 {
 	int key;
-	char value1[255];
+	char value1[MAX_CHAR_LENGTH];
 	float value2;
 	struct Node *next;
 };
@@ -20,6 +20,6 @@ struct Node
 struct Response
 {
 	int result;
-	char* value1;
+	char value1[MAX_CHAR_LENGTH];
 	float value2;
 };

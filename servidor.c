@@ -60,7 +60,7 @@ void process_req (struct Request *req_arg)
 	pthread_cond_signal (&cond_message);
 	pthread_mutex_unlock (&mutex_message);
 
-	if (req_local.op == 0) // init()
+	if (req_local.op == 0) // init ()
 	{
 		// Existe la cola?
 		// Eliminar la cola de tripletas si existe
@@ -71,9 +71,9 @@ void process_req (struct Request *req_arg)
 	{
 		// Existe la cola?
 		// Existe la clave?
-		// Comprobar value1 y value2
 		// queue(req_local.key, req_local.value1, req_local.value2)
 		// return en q_client
+		res.result = 0;
 	}
 	else if (req_local.op == 2) // get_value (k, *v1, *v2)
 	{
@@ -81,25 +81,33 @@ void process_req (struct Request *req_arg)
 		// Existe la clave?
 		// Escribir los valores en los punteros
 		// return en q_client
+		res.value1 = // Cola.get (req_local.key).value1;
+		res.value2 = // Cola.get (req_local.key).value2;
+		res.result = 0;
 	}
 	else if (req_local.op == 3) // modify_value (k, *v1, v2)
 	{
 		// Existe la cola?
 		// Existe la clave?
 		// Modificar valores
+			// Cola.modify (req_local.key, req_local.value1, req_local.value2);
 		// return en q_client
+		res.result = 0;
 	}
 	else if (req_local.op == 4) // delete_key (k)
 	{
 		// Existe la cola?
 		// Existe la clave?
 		// Borrar la clave
+			// Cola.delete (req_local.key);
 		// return en q_client
+		res.result = 0;
 	}
 	else if (req_local.op == 5) // num_items()
 	{
 		// Existe la cola?
 		// Contar elementos
+			// Cola.count ();
 		// return en q_client
 	}
 	q_client = mq_open (req_local.q_name, O_WRONLY);
