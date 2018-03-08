@@ -2,9 +2,15 @@
 #include <stdlib.h>
 #include "lista.h"
 
+int getState(){
+    return active;
+}
 
-Node head;
-int size = 0;
+int createList(){
+    size = 0;
+    active = TRUE;
+    return 1;
+}
 
 Node createNode(int k, char * v1, float v2){
     Node temp;
@@ -53,13 +59,15 @@ int edit(int k, char * v1, float v2){
     return 1;
 }
 
-int removeAll(){
+int removeList(){
     Node target = head;
     while(target != NULL){
         free(target);
         target = target.next;
     }
     size = 0;
+    head = NULL;
+    active = FALSE;
     return 1;
 }
 

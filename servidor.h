@@ -8,11 +8,3 @@
 
 #define TRUE 1
 #define FALSE 0
-
-struct Node
-{
-	int key;
-	char value1[MAX_CHAR_LENGTH];
-	float value2;
-	struct Node *next;
-};
