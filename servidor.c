@@ -8,6 +8,8 @@ pthread_cond_t cond_message;
 
 void main (void)
 {
+	TipoLista lista = NULL;
+	
 	mqd_t q_server;
 
 	struct Request req;
@@ -63,12 +65,16 @@ void process_req (struct Request *req_arg)
 
 	if (req_local.op == 0) // init ()
 	{
-            if(getState()==FALSE) createList();//Si la lista no existe, la creamos
-            else{//Si existe, la eliminamos y la volvemos a crear
+            if (getState() == FALSE) // Si la lista no existe
+            {
+            	createList();
+            }
+            else// Si la lista sí existe
+            {
                 removeList();
                 createList();
             }
-            res->result = 0; //Siempre el resultado es correcto
+            res->result = 0;
 	}
 	else if (req_local.op == 1) // set_value (k, *v1, v2)
 	{

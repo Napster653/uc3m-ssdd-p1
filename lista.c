@@ -1,76 +1,62 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "lista.h"
 
-int getState(){
-    return active;
+struct Node
+{
+	int key;
+	char value1[256];
+	float value2;
+	struct Node* next;
+};
+typedef struct Node lista_num;
+
+struct elementoLista
+{
+	int key;
+	char value1[256];
+	float value2;
+	struct elementoLista* next;
+};
+typedef struct elementoLista* TipoLista;
+
+int init (ListType *l);
+int set (TipoLista *l, int key, char* value1, float value2);
+int get (ListType *l, int key);
+int modify (ListType *l, struct Triplet trip);
+int delete (ListType  *l, int key);
+int num (ListType *l);
+
+int init (ListType *l)
+{
+
 }
 
-int createList(){
-    size = 0;
-    active = TRUE;
-    return 1;
+int set (TipoLista *l, int key, char *value1, float value2) {
+	TipoLista p1, p2;
+	p1 = *l;
+	if (p1 == NULL)
+	{
+		p1 = (struct elementoLista *) malloc (sizeof (struct elementoLista));
+		p1->key = key;
+		strcpy (p1->value1, (const char*) value1);
+		p1->next = NULL;
+		*l = p1;
+	}
+	else
+	{
+		while (p1->next != NULL)
+		{
+			p1 = p1->next;
+		}
+		p2 = (struct elementoLista *) malloc (sizeof (struct elementoLista));
+		p2->num = num;
+		p2->next = NULL;
+		p1->next = p2;
+	}
+	return 0;
 }
 
-Node createNode(int k, char * v1, float v2){
-    Node temp;
-    temp = (Node) malloc(sizeof struct Node);
-    temp->key = k;
-    temp->value1 = v1;
-    temp->value2 = v2;
-    temp->next = NULL;
-    return temp;
-}
+int get (TipoLista *l, )
 
-int getNode(int k){
-    Node target = head;
-    while(target.key != k && target != NULL) target = target.next;
-    return target;
-}
-int add(int k, char * v1, float v2){
-    Node check = getNode(k);
-    if(check != NULL) return -1;
-    Node new = createNode(k, v1, v2);
-    if(size > 0) new->next = head;
-    head = new;
-    size++;
-    return 1;
-}
-
-int remove(int k){
-    Node check = getNode(k);
-    if(check == NULL) return -1;
-    if(check == head) head = head.next;          
-    else{
-        Node prev = head;
-        while(prev.next != check) prev = prev.next;
-        prev->next = check.next;
-    }
-    free(check); 
-    size--;
-    return 1;   
-}
-
-int edit(int k, char * v1, float v2){
-    Node elem = getNode(k);
-    if(elem == NULL) return -1;
-    elem->value1 = v1;
-    elem->value2 = v2;
-    return 1;
-}
-
-int removeList(){
-    Node target = head;
-    while(target != NULL){
-        free(target);
-        target = target.next;
-    }
-    size = 0;
-    head = NULL;
-    active = FALSE;
-    return 1;
-}
-
-int getSize(){
-    return size;
-}
