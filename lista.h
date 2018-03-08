@@ -2,19 +2,23 @@
 #define TRUE 1
 #define FALSE 0
 
+//DEFINICIÓN DEL NODO DE LA LISTA
 struct node {
+    //DATOS
     int key;
     char * value1;
     float value2;
+    //Puntero al siguiente elemento de la lista (Singly-linked)
     struct node * next;
 };
 typedef struct node *Node;
 
+//ATRIBUTOS DE NUESTRA SINGLY-LINKED LIST
+Node head;//Primer nodo
+int size;//Número de elementos
+int active;//active=TRUE --> lista iniciada/creada; active=FALSE --> lista no iniciada/creada
 
-Node head;
-int size;
-int active;
-
+//FUNCIONES DE LA LISTA
 int getState();
 int createList();
 Node createNode(int k, char * v1, float v2);
