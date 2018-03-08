@@ -2,12 +2,13 @@
 #define TRUE 1
 #define FALSE 0
 
-typedef struct{
+struct node {
     int key;
-    char value1[MAX_CHAR_LENGTH];
+    char * value1;
     float value2;
-    Node * next;
-} Node;
+    struct node * next;
+};
+typedef struct node *Node;
 
 
 Node head;
@@ -17,9 +18,9 @@ int active;
 int getState();
 int createList();
 Node createNode(int k, char * v1, float v2);
-int getNode(int k);
-int add(int k, char * v1, float v2);
-int remove(int k);
+Node getNode(int k);
+int addNode(int k, char * v1, float v2);
+int removeNode(int k);
 int edit(int k, char * v1, float v2);
 int removeList();
 int getSize();

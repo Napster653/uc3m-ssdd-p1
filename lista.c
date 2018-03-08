@@ -13,21 +13,21 @@ int createList(){
 }
 
 Node createNode(int k, char * v1, float v2){
-    Node temp;
-    temp = (Node) malloc(sizeof struct Node);
-    temp->key = k;
-    temp->value1 = v1;
-    temp->value2 = v2;
-    temp->next = NULL;
-    return temp;
+    Node newNode;
+    newNode = (Node) malloc(sizeof (struct node));
+    newNode->key = k;
+    newNode->value1 = v1;
+    newNode->value2 = v2;
+    newNode->next = NULL;
+    return newNode;
 }
 
-int getNode(int k){
+Node getNode(int k){
     Node target = head;
-    while(target.key != k && target != NULL) target = target.next;
+    while(target->key != k && target != NULL) target = target->next;
     return target;
 }
-int add(int k, char * v1, float v2){
+int addNode(int k, char * v1, float v2){
     Node check = getNode(k);
     if(check != NULL) return -1;
     Node new = createNode(k, v1, v2);
@@ -37,14 +37,14 @@ int add(int k, char * v1, float v2){
     return 1;
 }
 
-int remove(int k){
+int removeNode(int k){
     Node check = getNode(k);
     if(check == NULL) return -1;
-    if(check == head) head = head.next;          
+    if(check == head) head = head->next;          
     else{
         Node prev = head;
-        while(prev.next != check) prev = prev.next;
-        prev->next = check.next;
+        while(prev->next != check) prev = prev->next;
+        prev->next = check->next;
     }
     free(check); 
     size--;
@@ -63,7 +63,7 @@ int removeList(){
     Node target = head;
     while(target != NULL){
         free(target);
-        target = target.next;
+        target = target->next;
     }
     size = 0;
     head = NULL;
