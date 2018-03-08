@@ -1,5 +1,6 @@
 #include "messages.h"
 
+#include <string.h>
 #include <mqueue.h>
 #include <pthread.h>
 #include <stdio.h>
@@ -14,8 +15,8 @@ int init ()
 	struct Request req;
 	struct Response res;
 	struct mq_attr q_attr;
-	attr.mq_maxmsg = 1;
-	attr.mq_msgsize = sizeof(int);
+	q_attr.mq_maxmsg = 1;
+	q_attr.mq_msgsize = sizeof(int);
 
 	char name[128];
 	sprintf(name, "/QueueClient-%d", getpid());
@@ -42,8 +43,8 @@ int set_value (int key, char* value1, float value2)
 	struct Request req;
 	struct Response res;
 	struct mq_attr q_attr;
-	attr.mq_maxmsg = 1;
-	attr.mq_msgsize = sizeof(int);
+	q_attr.mq_maxmsg = 1;
+	q_attr.mq_msgsize = sizeof(int);
 
 	char name[128];
 	sprintf(name, "/QueueClient-%d", getpid());
@@ -73,8 +74,8 @@ int get_value (int key, char* value1, float* value2)
 	struct Request req;
 	struct Response res;
 	struct mq_attr q_attr;
-	attr.mq_maxmsg = 1;
-	attr.mq_msgsize = sizeof(int);
+	q_attr.mq_maxmsg = 1;
+	q_attr.mq_msgsize = sizeof(int);
 
 	char name[128];
 	sprintf(name, "/QueueClient-%d", getpid());
@@ -111,8 +112,8 @@ int modify_value (int key, char* value1, float value2)
 	struct Request req;
 	struct Response res;
 	struct mq_attr q_attr;
-	attr.mq_maxmsg = 1;
-	attr.mq_msgsize = sizeof(int);
+	q_attr.mq_maxmsg = 1;
+	q_attr.mq_msgsize = sizeof(int);
 
 	char name[128];
 	sprintf(name, "/QueueClient-%d", getpid());
@@ -122,7 +123,7 @@ int modify_value (int key, char* value1, float value2)
 	req.op = 3;
 	req.key = key;
 	strcpy (req.value1, (const char*) value1);
-	req.value2 = value2
+	req.value2 = value2;
 	strcpy (req.q_name, (const char*) name);
 
 	mq_send (q_server, (const char*) &req, sizeof(struct Request), 0);
@@ -132,7 +133,7 @@ int modify_value (int key, char* value1, float value2)
 	mq_close (q_client);
 	mq_unlink ((const char*) name);
 
-	return ret.result;
+	return res.result;
 }
 
 int delete_key (int key)
@@ -142,8 +143,8 @@ int delete_key (int key)
 	struct Request req;
 	struct Response res;
 	struct mq_attr q_attr;
-	attr.mq_maxmsg = 1;
-	attr.mq_msgsize = sizeof(int);
+	q_attr.mq_maxmsg = 1;
+	q_attr.mq_msgsize = sizeof(int);
 
 	char name[128];
 	sprintf(name, "/QueueClient-%d", getpid());
@@ -151,7 +152,7 @@ int delete_key (int key)
 	q_server = mq_open ("/Queue656", O_WRONLY);
 
 	req.op = 4;
-	req.key = key
+	req.key = key;
 	strcpy (req.q_name, (const char*) name);
 
 	mq_send (q_server, (const char*) &req, sizeof(struct Request), 0);
@@ -161,7 +162,7 @@ int delete_key (int key)
 	mq_close (q_client);
 	mq_unlink ((const char*) name);
 
-	return ret.result;
+	return res.result;
 }
 
 int num_items ()
@@ -171,8 +172,8 @@ int num_items ()
 	struct Request req;
 	struct Response res;
 	struct mq_attr q_attr;
-	attr.mq_maxmsg = 1;
-	attr.mq_msgsize = sizeof(int);
+	q_attr.mq_maxmsg = 1;
+	q_attr.mq_msgsize = sizeof(int);
 
 	char name[128];
 	sprintf(name, "/QueueClient-%d", getpid());
@@ -189,5 +190,5 @@ int num_items ()
 	mq_close (q_client);
 	mq_unlink ((const char*) name);
 
-	return ret.result;
+	return res.result;
 }
