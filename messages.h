@@ -5,7 +5,7 @@ struct Request
 {
 	int op;
 	int key;
-	char value1[MAX_VALUE1];
+	char * value1;
 	float value2;
 	char q_name[MAX_Q_NAME];
 };
@@ -13,6 +13,6 @@ struct Request
 struct Response
 {
 	int result;
-	char value1[MAX_CHAR_LENGTH];
+	char * value1;
 	float value2;
 };
