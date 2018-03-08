@@ -74,7 +74,7 @@ void process_req (struct Request *req_arg)
 	{
             if(getState() == FALSE) res.result = -1; //La lista no existe
             else{
-                if(sizeof(req_local.value1 > 255)) res.result = -1; //Value1 demasiado largo
+                if(sizeof(req_local.value1) > 255) res.result = -1; //Value1 demasiado largo
                 else{
                     if(add(req_local.key, req_local.value1, req_local.value2) < 0) res.result = -1;//Clave ya registrada
                     else res.result = 0;//Insertado con éxito
@@ -96,7 +96,7 @@ void process_req (struct Request *req_arg)
 	}
 	else if (req_local.op == 3) // modify_value (k, *v1, v2)
 	{
-            if(sizeof(req_local.value1 > 255))return -1; //Value1 demasiado largo
+            if(sizeof(req_local.value1) > 255)return -1; //Value1 demasiado largo
             else if(getState() == FALSE) res.result = -1; // No existe la lista
             else{
                 if(edit(req_local.key, req_local.value1, req_local.value2) < 0) res.result = -1; //La clave no existe
