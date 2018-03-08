@@ -21,8 +21,8 @@ int active;//active=TRUE --> lista iniciada/creada; active=FALSE --> lista no in
 //FUNCIONES DE LA LISTA
 int getState();
 int createList();
-Node createNode(int k, char * v1, float v2);
-Node getNode(int k);
+struct node createNode(int k, char * v1, float v2);
+struct node getNode(int k);
 int addNode(int k, char * v1, float v2);
 int removeNode(int k);
 int edit(int k, char * v1, float v2);

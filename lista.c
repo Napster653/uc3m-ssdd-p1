@@ -2,13 +2,13 @@
 #include <stdlib.h>
 #include "lista.h"
 
-//Función que devuelve el estado actual de la lista (iniciada=TRUE/no iniciada=FALSE)
+// Función que devuelve el estado actual de la lista (iniciada=TRUE/no iniciada=FALSE)
 int getState ()
 {
 	return active;
 }
 
-//Función utilizada para iniciar la lista
+// Función utilizada para iniciar la lista
 int createList ()
 {
 	size = 0;
@@ -16,11 +16,11 @@ int createList ()
 	return 1;
 }
 
-//Función que devuelve una estructura de nodo con los datos introducidos como args
+// Función que devuelve una estructura de nodo con los datos introducidos como args
 Node createNode (int k, char * v1, float v2)
 {
 	Node newNode;
-	//Es necesario reservar el espacio necesario para el nodo
+	// Es necesario reservar el espacio necesario para el nodo
 	newNode = (Node) malloc (sizeof (struct node)); 
 	newNode->key = k;
 	newNode->value1 = v1;
@@ -29,7 +29,7 @@ Node createNode (int k, char * v1, float v2)
 	return newNode;
 }
 
-//Función que busca y devuelve el nodo cuya KEY es la introducida como arg
+// Función que busca y devuelve el nodo cuya KEY es la introducida como arg
 Node getNode (int k)
 {
 	Node target = head;
@@ -37,39 +37,39 @@ Node getNode (int k)
 	{
 		target = target->next;
 	}
-	return target;//Si la KEY introducida no está en la lista, devuelve NULL
+	return target; // Si la KEY introducida no está en la lista, devuelve NULL
 }
 
-//Función que crea y añade un nodo al inicio de la lista, dados los datos como argumentos
+// Función que crea y añade un nodo al inicio de la lista, dados los datos como argumentos
 int addNode (int k, char * v1, float v2)
 {
 	Node check = getNode(k);
 	if (check != NULL)
 	{
-		return -1;//La función devuelve -1 (ERROR) si la clave ya fue registrada
+		return -1; // La función devuelve -1 (ERROR) si la clave ya fue registrada
 	}
 	Node new = createNode(k, v1, v2);
 	if (size > 0)
 	{
-		new->next = head;//La función solo asigna el puntero NEXT si hay algún nodo en la lista
+		new->next = head; // La función solo asigna el puntero NEXT si hay algún nodo en la lista
 	}
 	head = new;
 	size++;
 	return 1;
 }
 
-//Función que elimina un nodo de la lista dada una clave(k) como argumento
+// Función que elimina un nodo de la lista dada una clave(k) como argumento
 int removeNode (int k)
 {
 	Node check = getNode (k);
 	if (check == NULL)
 	{
-		return -1;//La función devuelve -1(ERROR) si no encuentra la clave k en la lista
+		return -1; // La función devuelve -1(ERROR) si no encuentra la clave k en la lista
 	}
-	//Para eliminar, el nodo es ignorado dentro de la lista y su espacio es liberado (free)
+	// Para eliminar, el nodo es ignorado dentro de la lista y su espacio es liberado (free)
 	if (check == head)
 	{
-		head = head->next;//Si es el primer elem, solo se cambia el puntero de head al segundo
+		head = head->next; // Si es el primer elem, solo se cambia el puntero de head al segundo
 	}
 	else
 	{
