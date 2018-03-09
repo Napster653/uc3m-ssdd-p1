@@ -1,5 +1,3 @@
-#include "messages.h"
-
 #include <string.h>
 #include <mqueue.h>
 #include <pthread.h>
@@ -7,19 +5,46 @@
 #include <stdlib.h>
 #include <sys/types.h>
 #include <unistd.h>
+#define MAX_VALUE1 255
+#define MAX_Q_NAME 128
+
+mqd_t q_client;
+char name[128];
+
+
+struct Request
+{
+	int op;
+	int key;
+	char * value1;
+	float value2;
+	char q_name[MAX_Q_NAME];
+};
+
+struct Response
+{
+	int result;
+	char * value1;
+	float value2;
+};
+
+int closeQueue ()
+{
+	mq_close (q_client);
+	return 0;
+}
 
 int init ()
 {
 	mqd_t q_server;
-	mqd_t q_client;
 	struct Request req;
 	struct Response res;
 	struct mq_attr q_attr;
 	q_attr.mq_maxmsg = 1;
-	q_attr.mq_msgsize = sizeof(int);
+	q_attr.mq_msgsize = sizeof(struct Response);
 
-	char name[128];
 	sprintf(name, "/QueueClient-%d", getpid());
+	
 	q_client = mq_open ((const char*) name, O_CREAT|O_RDONLY, 0700, &q_attr);
 	q_server = mq_open ("/Queue656", O_WRONLY);
 
@@ -27,10 +52,11 @@ int init ()
 	strcpy (req.q_name, (const char*) name);
 
 	mq_send (q_server, (const char*) &req, sizeof(struct Request), 0);
-	mq_receive (q_client, (char*) &res, sizeof(int), 0);
+	printf("Mensaje enviado\n");
+	mq_receive (q_client, (char*) &res, sizeof(struct Response), 0);
+	printf("Mensaje recibido\n");
 
 	mq_close (q_server);
-	mq_close (q_client);
 	mq_unlink ((const char*) name);
 
 	return res.result;
@@ -39,16 +65,9 @@ int init ()
 int set_value (int key, char* value1, float value2)
 {
 	mqd_t q_server;
-	mqd_t q_client;
 	struct Request req;
 	struct Response res;
-	struct mq_attr q_attr;
-	q_attr.mq_maxmsg = 1;
-	q_attr.mq_msgsize = sizeof(int);
 
-	char name[128];
-	sprintf(name, "/QueueClient-%d", getpid());
-	q_client = mq_open ((const char*) name, O_CREAT|O_RDONLY, 0700, &q_attr);
 	q_server = mq_open ("/Queue656", O_WRONLY);
 
 	req.op = 1;
@@ -61,7 +80,6 @@ int set_value (int key, char* value1, float value2)
 	mq_receive (q_client, (char*) &res, sizeof(int), 0);
 
 	mq_close (q_server);
-	mq_close (q_client);
 	mq_unlink ((const char*) name);
 
 	return res.result;
@@ -73,13 +91,7 @@ int get_value (int key, char* value1, float* value2)
 	mqd_t q_client;
 	struct Request req;
 	struct Response res;
-	struct mq_attr q_attr;
-	q_attr.mq_maxmsg = 1;
-	q_attr.mq_msgsize = sizeof(int);
 
-	char name[128];
-	sprintf(name, "/QueueClient-%d", getpid());
-	q_client = mq_open ((const char*) name, O_CREAT|O_RDONLY, 0700, &q_attr);
 	q_server = mq_open ("/Queue656", O_WRONLY);
 
 	req.op = 2;
@@ -90,7 +102,6 @@ int get_value (int key, char* value1, float* value2)
 	mq_receive (q_client, (char*) &res, sizeof(int), 0);
 
 	mq_close (q_server);
-	mq_close (q_client);
 	mq_unlink ((const char*) name);
 
 	if (res.result == 0)
@@ -111,13 +122,7 @@ int modify_value (int key, char* value1, float value2)
 	mqd_t q_client;
 	struct Request req;
 	struct Response res;
-	struct mq_attr q_attr;
-	q_attr.mq_maxmsg = 1;
-	q_attr.mq_msgsize = sizeof(int);
 
-	char name[128];
-	sprintf(name, "/QueueClient-%d", getpid());
-	q_client = mq_open ((const char*) name, O_CREAT|O_RDONLY, 0700, &q_attr);
 	q_server = mq_open ("/Queue656", O_WRONLY);
 
 	req.op = 3;
@@ -130,7 +135,6 @@ int modify_value (int key, char* value1, float value2)
 	mq_receive (q_client, (char*) &res, sizeof(int), 0);
 
 	mq_close (q_server);
-	mq_close (q_client);
 	mq_unlink ((const char*) name);
 
 	return res.result;
@@ -142,13 +146,7 @@ int delete_key (int key)
 	mqd_t q_client;
 	struct Request req;
 	struct Response res;
-	struct mq_attr q_attr;
-	q_attr.mq_maxmsg = 1;
-	q_attr.mq_msgsize = sizeof(int);
 
-	char name[128];
-	sprintf(name, "/QueueClient-%d", getpid());
-	q_client = mq_open ((const char*) name, O_CREAT|O_RDONLY, 0700, &q_attr);
 	q_server = mq_open ("/Queue656", O_WRONLY);
 
 	req.op = 4;
@@ -159,7 +157,6 @@ int delete_key (int key)
 	mq_receive (q_client, (char*) &res, sizeof(int), 0);
 
 	mq_close (q_server);
-	mq_close (q_client);
 	mq_unlink ((const char*) name);
 
 	return res.result;
@@ -171,13 +168,7 @@ int num_items ()
 	mqd_t q_client;
 	struct Request req;
 	struct Response res;
-	struct mq_attr q_attr;
-	q_attr.mq_maxmsg = 1;
-	q_attr.mq_msgsize = sizeof(int);
 
-	char name[128];
-	sprintf(name, "/QueueClient-%d", getpid());
-	q_client = mq_open ((const char*) name, O_CREAT|O_RDONLY, 0700, &q_attr);
 	q_server = mq_open ("/Queue656", O_WRONLY);
 
 	req.op = 5;
@@ -187,7 +178,6 @@ int num_items ()
 	mq_receive (q_client, (char*) &res, sizeof(int), 0);
 
 	mq_close (q_server);
-	mq_close (q_client);
 	mq_unlink ((const char*) name);
 
 	return res.result;
