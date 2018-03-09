@@ -17,15 +17,15 @@ struct Request
 {
 	int op;
 	int key;
-	char * value1;
+	char value1[256];
 	float value2;
-	char q_name[MAX_Q_NAME];
+	char q_name[256];
 };
 
 struct Response
 {
 	int result;
-	char * value1;
+	char value1[256];
 	float value2;
 };
 
@@ -92,11 +92,15 @@ Node createNode (int k, char * v1, float v2)
 // Función que busca y devuelve el nodo cuya KEY es la introducida como arg
 Node getNode (int k)
 {
+	printf("a\n");
 	Node target = head;
+	printf("b\n");
 	while (target->key != k && target != NULL)
 	{
+		printf("c\n");
 		target = target->next;
 	}
+	printf("d\n");
 	return target; // Si la KEY introducida no está en la lista, devuelve NULL
 }
 
@@ -193,6 +197,11 @@ int main (void)
 	pthread_attr_t t_attr;
 	pthread_t thid;
 
+	if (mq_unlink("/Queue656") == 0)
+	{
+		printf("Message queue removed\n");
+	}
+
 	q_server = mq_open ("/Queue656", O_CREAT|O_RDONLY, 0700, &q_attr);
 	if (q_server == -1)
 	{
@@ -285,14 +294,16 @@ void process_req (struct Request *req_arg)
 		}
 		else
 		{
+			printf("a\n");
 			Node elem = getNode(req_local.key);
+			printf("b\n");
 			if (elem == NULL) //No existe la clave
 			{
 				res.result = -1;
 			}
 			else //Escribir los valores en los punteros
 			{
-				res.value1 = elem->value1;
+				strcpy (res.value1, (const char*) elem->value1);
 				res.value2 = elem->value2;
 				res.result = 0;
 			}
