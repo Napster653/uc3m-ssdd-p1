@@ -92,15 +92,17 @@ Node createNode (int k, char * v1, float v2)
 // Función que busca y devuelve el nodo cuya KEY es la introducida como arg
 Node getNode (int k)
 {
-	printf("a\n");
+	//printf("a\n");
 	Node target = head;
-	printf("b\n");
-	while (target->key != k && target != NULL)
-	{
-		printf("c\n");
-		target = target->next;
+	//printf("b\n");
+	if(target != NULL){
+		while (target->key != k && target != NULL)
+		{
+			//printf("c\n");
+			target = target->next;
+		}
 	}
-	printf("d\n");
+	//printf("d\n");
 	return target; // Si la KEY introducida no está en la lista, devuelve NULL
 }
 
