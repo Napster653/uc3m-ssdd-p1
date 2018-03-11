@@ -39,12 +39,11 @@ int init ()
 {
 	struct Request req;
 	struct Response res;
+
 	struct mq_attr q_attr;
 	q_attr.mq_maxmsg = 10;
 	q_attr.mq_msgsize = sizeof(struct Response);
-
 	sprintf(name, "/QueueClient-%d", getpid());
-	
 	printf("%s\n", name);
 	q_server = mq_open ("/Queue656", O_WRONLY);
 	if (q_server == -1)
@@ -70,17 +69,11 @@ int set_value (int key, char* value1, float value2)
 	struct Request req;
 	struct Response res;
 
-	printf("op\n");
 	req.op = 1;
-	printf("key\n");
 	req.key = key;
-	printf("value1\n");
 	strcpy (req.value1, (const char*) value1);
-	printf("value2\n");
 	req.value2 = value2;
-	printf("qname\n");
 	strcpy (req.q_name, (const char*) name);
-	printf("valores dados\n");
 
 	if (mq_send (q_server, (const char*) &req, sizeof(struct Request), 0) != 0)
 		perror("mq_send");
