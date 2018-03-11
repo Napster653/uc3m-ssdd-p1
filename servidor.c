@@ -34,10 +34,10 @@ struct node
 {
 	// DATOS
 	int key;
-	char * value1;
+	char value1[256];
 	float value2;
 	// Puntero al siguiente elemento de la lista (Singly-linked)
-	struct node * next;
+	struct node* next;
 };
 typedef struct node *Node;
 
@@ -80,14 +80,14 @@ int createList ()
 // Función que devuelve una estructura de nodo con los datos introducidos como args
 Node createNode (int k, char * v1, float v2)
 {
-	Node newNode;
+	Node nNode;
 	// Es necesario reservar el espacio necesario para el nodo
-	newNode = (Node) malloc (sizeof (struct node));
-	newNode->key = k;
-	newNode->value1 = v1;
-	newNode->value2 = v2;
-	newNode->next = NULL;
-	return newNode;
+	nNode = (struct node*) malloc (sizeof (struct node));
+	nNode->key = k;
+	strcpy (nNode->value1, (const char*) v1);
+	nNode->value2 = v2;
+	nNode->next = NULL;
+	return nNode;
 }
 
 // Función que busca y devuelve el nodo cuya KEY es la introducida como arg
@@ -95,8 +95,8 @@ Node getNode (int k)
 {
 	Node target = head;
 
-	if (target == NULL) return target;
-	else if (target->key == k) return target;
+	if (target == NULL){ printf("debug3\n"); return target;}
+	else if (target->key == k){ printf("debug4\n"); return target;}
 	else
 	{
 		while (target != NULL)
@@ -106,7 +106,14 @@ Node getNode (int k)
 				printf ("Get devolviendo %d - %s - %f\n", target->key, target->value1, target->value2);
 				return target;
 			}
-			target = target->next;
+			if (target->next == NULL)
+			{
+				return NULL;
+			}
+			else
+			{
+				target = target->next;
+			}
 		}
 	}
 	return target; // Si la KEY introducida no está en la lista, devuelve NULL
@@ -120,17 +127,18 @@ int addNode (int k, char * v1, float v2)
 	{
 		return -1; // La función devuelve -1 (ERROR) si la clave ya fue registrada
 	}
+
 	Node newNode = createNode(k, v1, v2);
 	printf ("Nodo creado: %d - %s - %f\n", newNode->key, newNode->value1, newNode->value2);
 	if (size > 0)
 	{
-		printf("Ya hay un nodo en la lista, ahora será el número 2\n");
 		newNode->next = head; // La función solo asigna el puntero NEXT si hay algún nodo en la lista
 	}
 	head = newNode;
+	printf ("Nodo head: %d - %s - %f\n", head->key, head->value1, head->value2);
 
 	check = head;
-	printf("========Ckeckeo========\n");
+	printf("\n========Ckeckeo========\n");
 	while (check != NULL)
 	{
 		printf ("\t%d\t%s\t%f\n", check->key, check->value1, check->value2);
@@ -176,7 +184,7 @@ int edit (int k, char * v1, float v2)
 	{
 		return -1;//Si la clave no existe (ERROR), la función devuelve -1
 	}
-	elem->value1 = v1;
+	strcpy (elem->value1, (const char*) v1);
 	elem->value2 = v2;
 	return 1;
 }
@@ -268,10 +276,9 @@ void process_req (struct Request *req_arg)
 
 	printf("Request recibida:\n");
 	printf("\tOp: %d\n", req_local.op);
-	printf("\tKey: %d\n", req_local.key);
-	printf("\tV1: %s\n", req_local.value1);
-	printf("\tV2: %f\n", req_local.value2);
-
+	printf("\tKey: "); if(req_local.op > 0 && req_local.op < 5) printf("%d\n", req_local.key); else printf("N/A\n");
+	printf("\tV1: "); if(req_local.op == 1 || req_local.op == 3) printf("%s\n", req_local.value1); else printf("N/A\n");
+	printf("\tV2: "); if(req_local.op == 1 || req_local.op == 3) printf("%f\n", req_local.value2); else printf("N/A\n");
 
 	pthread_mutex_lock (&mutex_funcion);
 	switch (req_local.op)
@@ -318,41 +325,28 @@ void process_req (struct Request *req_arg)
 			else
 			{
 				Node elem = getNode(req_local.key);
-				printf ("Obtenido el nodo %d - %s - %f\n", elem->key, elem->value1, elem->value2);
 				if (elem == NULL) //No existe la clave
 				{
 					res.result = -1;
 				}
 				else //Escribir los valores en los punteros
 				{
+					printf ("Obtenido el nodo %d - %s - %f\n", elem->key, elem->value1, elem->value2);
 					strcpy (res.value1, (const char*) elem->value1);
 					res.value2 = elem->value2;
 					res.result = 0;
 				}
 			}
 			break;
-		case 3:
-			if (sizeof (req_local.value1) > 255)
-			{
-				res.result = -1; //Value1 demasiado largo
-			}
-			else if (getState() == FALSE)
-			{
-				res.result = -1; // No existe la lista
-			}
+		case 3: // modify
+			if (getState() == FALSE) res.result = -1; // No existe la lista
 			else
 			{
-				if (edit (req_local.key, req_local.value1, req_local.value2) < 0)
-				{
-					res.result = -1; //La clave no existe
-				}
-				else
-				{
-					res.result = 0; //Modificado con éxito
-				}
+				if (edit (req_local.key, req_local.value1, req_local.value2) == 0) res.result = 0; // Success
+				else res.result = -1; // No key
 			}
 			break;
-		case 4:
+		case 4: // delete
 			if (getState() == FALSE)
 			{
 				res.result = -1; // No existe la lista
@@ -369,7 +363,7 @@ void process_req (struct Request *req_arg)
 				}
 			}
 			break;
-		case 5:
+		case 5: // num
 			if (getState() == FALSE)
 			{
 				res.result = -1; // No existe la lista

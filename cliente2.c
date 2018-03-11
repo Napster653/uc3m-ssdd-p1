@@ -15,7 +15,7 @@ int main ()
 	printf ("Done!\n\n");
 
 	printf ("Set...");
-	if (set_value (2, "test2", 22.2) < 0)
+	if (set_value (3, "test33333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333", 33.3) < 0)
 	{
 		printf ("Error!\n\n");
 	}
@@ -34,12 +34,12 @@ int main ()
 
 	printf ("Get...");
 	get_value (2, valor1, &valor2);
-	printf ("Done!\n");
+	printf("Done!\n");
 	printf ("%s\n", valor1);
 	printf ("%f\n\n", valor2);
 
-	printf ("Modify...");
-	modify_value (2, "test2modified", 33.3);
+	printf ("Delete...");
+	delete_key (2);
 	printf ("Done!\n\n");
 
 	printf ("Get...");
@@ -49,10 +49,16 @@ int main ()
 	printf ("%f\n\n", valor2);
 
 	printf ("Get...");
-	get_value (2, valor1, &valor2);
-	printf ("Done!\n");
-	printf ("%s\n", valor1);
-	printf ("%f\n\n", valor2);
+	if (get_value (2, valor1, &valor2) < 0)
+	{
+		printf("Error!\n\n");
+	}
+	else
+	{
+		printf ("Done!\n");
+		printf ("%s\n", valor1);
+		printf ("%f\n\n", valor2);
+	}
 
 	printf ("CloseQueue...");
 	closeQueue ();

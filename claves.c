@@ -43,8 +43,8 @@ int init ()
 	struct mq_attr q_attr;
 	q_attr.mq_maxmsg = 10;
 	q_attr.mq_msgsize = sizeof(struct Response);
-	sprintf(name, "/QueueClient-%d", getpid());
-	printf("%s\n", name);
+	sprintf (name, "/QueueClient-%d", getpid());
+	printf ("\t%s\t", name);
 	q_server = mq_open ("/Queue656", O_WRONLY);
 	if (q_server == -1)
 	{
@@ -57,17 +57,37 @@ int init ()
 
 	if (mq_send (q_server, (const char*) &req, sizeof(struct Request), 0) != 0)
 		perror("mq_send");
-	printf("Mensaje enviado\n");
 	mq_receive (q_client, (char*) &res, sizeof(struct Response), 0);
-	printf("Mensaje recibido\n");
 
 	return res.result;
+}
+
+int secondaryInit ()
+{
+	struct mq_attr q_attr;
+	q_attr.mq_maxmsg = 10;
+	q_attr.mq_msgsize = sizeof(struct Response);
+	sprintf (name, "/QueueClient-%d", getpid());
+	printf ("\t%s\t", name);
+	q_server = mq_open ("/Queue656", O_WRONLY);
+	if (q_server == -1)
+	{
+		perror("mq_open");
+	}
+	q_client = mq_open ((const char*) name, O_CREAT|O_RDONLY, 0700, &q_attr);
+
+	return 0;
 }
 
 int set_value (int key, char* value1, float value2)
 {
 	struct Request req;
 	struct Response res;
+
+	if (strlen(value1) > 255)
+	{
+		return -1;
+	}
 
 	req.op = 1;
 	req.key = key;
